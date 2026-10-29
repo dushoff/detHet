@@ -20,6 +20,7 @@ Sources += $(wildcard *.md *.R)
 ## Simulation functions live in RTutorials
 pardirs += RTutorials
 Ignore += $(pardirs)
+colddirs += $(pardirs)
 
 ## Grant figure: S, I, R and their mean mixing rates (Rnull=1.5, kappa=2, 20 groups)
 ## hetFig.Rout.pdf: hetFig.R
@@ -48,6 +49,7 @@ makestuff:
 -include makestuff/os.mk
 
 -include makestuff/pipeR.mk
+-include makestuff/hotcold.mk
 
 -include makestuff/git.mk
 -include makestuff/visual.mk
