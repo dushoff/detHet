@@ -2,15 +2,16 @@ library(shellpipes)
 library(deSolve)
 library(dplyr)
 library(tidyr)
-library(ggplot2); theme_set(theme_bw(base_size=14))
+library(ggplot2); theme_set(theme_bw(base_size=8))
 library(patchwork)
+library(directlabels)
 
 sourceFiles()
 
 Rnull <- 1.5
 kappa <- 2
 nGroups <- 20
-Tfinal <- 12
+Tfinal <- 10
 
 sim <- groupSim(cbar=Rnull, kappa=kappa, nGroups=nGroups, Tfinal=Tfinal, steps=200)
 
@@ -27,18 +28,32 @@ long <- (sim
 	)
 )
 
+## Room on the right for direct labels
+xscale <- scale_x_continuous(expand=expansion(mult=c(0.02, 0.1)))
+
 props <- (ggplot(filter(long, panel=="prop"))
 	+ aes(time, value, color=class)
-	+ geom_line(linewidth=1)
-	+ labs(x=NULL, y="Proportion of population", color=NULL)
+	+ geom_line(linewidth=0.6)
+	+ xscale
+	+ labs(x=NULL, y="Proportion")
+	+ theme(legend.position="none", axis.text.x=element_blank())
 )
 
 rates <- (ggplot(filter(long, panel=="rate"))
 	+ aes(time, value, color=class)
-	+ geom_line(linewidth=1, na.rm=TRUE)
+	+ geom_line(linewidth=0.6, na.rm=TRUE)
 	+ geom_hline(yintercept=Rnull, linetype="dashed", color="grey50")
-	+ labs(x="Time (generations)", y="Mean mixing rate", color=NULL)
+	+ annotate("text", x=0, y=Rnull, label="population mean"
+		, hjust=0, vjust=-0.4, size=2.2, colour="grey40"
+	)
+	+ geom_dl(aes(label=class), na.rm=TRUE
+		, method=list("last.points", dl.trans(x=x+0.05), "bumpup", cex=0.7)
+	)
+	+ xscale
+	+ labs(x="Time (generations)", y="Mean activity")
+	+ theme(legend.position="none")
 )
 
-startGraphics(height=7, width=6)
-print(props / rates + plot_layout(guides="collect"))
+## Sized for one panel of a 7-inch-wide figure; don't rescale in LaTeX
+startGraphics(height=2.4, width=1.9)
+print(props / rates + plot_layout(heights=c(2, 3)))
