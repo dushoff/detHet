@@ -1,11 +1,5 @@
-## This is [project.Makefile] …
-## make ghrepo_<public/private>
-## Add project info to Makefile (probably optional)
-## make sync
-## … before working here.
+## This is detHet
 
-## This section is for Dushoff-style vim-setup and vim targeting
-## You can delete it if you don't want it
 current: target
 -include target.mk
 Ignore = target.mk
