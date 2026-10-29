@@ -11,6 +11,23 @@ vim_session:
 
 ######################################################################
 
+Sources += $(wildcard *.md *.R)
+
+## claude.md
+
+######################################################################
+
+## Simulation functions live in RTutorials
+pardirs += RTutorials
+Ignore += $(pardirs)
+
+## Grant figure: S, I, R and their mean mixing rates (Rnull=1.5, kappa=2, 20 groups)
+## hetFig.Rout.pdf: hetFig.R
+hetFig.Rout: hetFig.R RTutorials/ICI3D_Heterogeneous_Groups.R makestuff/okabe.R
+	$(pipeR)
+
+######################################################################
+
 ### Makestuff
 
 Sources += Makefile
@@ -30,7 +47,7 @@ makestuff:
 
 -include makestuff/os.mk
 
-## -include makestuff/pipeR.mk
+-include makestuff/pipeR.mk
 
 -include makestuff/git.mk
 -include makestuff/visual.mk
